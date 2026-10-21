@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>미션 핵심어 마인드맵</title>
+<meta name="description" content="우정인재개발원 1차 전략 워크숍 — 미션 핵심어 마인드맵에 단어를 더하고 빼며 생각을 정리하는 도구">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* ───────── 설정은 아래 <script> 맨 위 CONFIG에서 바꿈 ───────── */
+:root{
+  --navy:#1F497D; --navy2:#2E5E99; --sky:#DCE6F2; --pale:#F5F8FC; --line:#BFC9D6;
+  --ink:#222; --sub:#5B6573; --mute:#8A94A3; --bg:#EEF2F7; --card:#fff;
+  --star:#C98A00; --starbg:#FFF4D6; --add:#E8F0FB; --del:#F2F2F2;
+  --b1:#1F497D; --b2:#3D6FA8; --b3:#5A7FA6;
+  --r:12px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:Pretendard,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;padding-bottom:92px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* 상단 */
+header{background:var(--navy);color:#fff;padding:14px 16px 12px}
+header .in{max-width:1180px;margin:0 auto;display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+header h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.3px}
+header p{margin:3px 0 0;font-size:13px;opacity:.85}
+.who{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.who select,.who input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:6px 8px;font-size:13px}
+.who select option{color:#222}
+.who input::placeholder{color:rgba(255,255,255,.7)}
+
+.inapp{background:#FFF4D6;border-bottom:1px solid #EBD38F;padding:10px 16px;font-size:13.5px}
+.inapp .in{max-width:1180px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inapp b{color:#7A5200}
+
+/* 도구줄 */
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(238,242,247,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.toolbar .in{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:999px;font-weight:700;font-size:14px;color:var(--sub)}
+.seg button.on{background:var(--navy);color:#fff}
+.hint{font-size:13px;color:var(--sub);flex:1;min-width:200px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:13.5px;font-weight:600}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.ghost{background:transparent}
+.btn:active{transform:translateY(1px)}
+
+/* 마인드맵 — 위에서 아래로 내려가는 나무 모양 */
+main{max-width:1180px;margin:0 auto;padding:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #C9D5E5;background:var(--pale);border-radius:999px;padding:4px 11px;font-size:14px;line-height:1.2;min-height:32px;cursor:pointer;white-space:nowrap}
+.chip.added{background:var(--add);border-style:dashed;border-color:#7FA0C8}
+.chip.star{background:var(--starbg);border-color:var(--star);font-weight:700}
+.chip.star::before{content:"★";color:var(--star);font-size:12px}
+.x{border:0;background:#E3E8EF;color:#555;width:20px;height:20px;border-radius:50%;font-size:12px;line-height:20px;padding:0;display:none;flex:none}
+body.del .x{display:inline-block}
+.btn.delon{background:#F2F2F2;border-color:#888}
+.mm{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 16px 6px}
+.root{background:var(--navy);color:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:baseline;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 12px rgba(31,73,125,.2)}
+.root small{font-weight:500;font-size:12.5px;opacity:.85}
+.bb{position:relative;margin-left:12px;padding:0 0 18px 22px;border-left:3px solid var(--bc)}
+.bb:last-child{border-left-color:transparent}
+.bb:last-child::before{content:"";position:absolute;left:-3px;top:0;height:22px;border-left:3px solid var(--bc)}
+.bb0{--bc:#1F497D}.bb1{--bc:#2E5E99}.bb2{--bc:#3D6FA8}.bb3{--bc:#5A7FA6}
+.branch{display:inline-block;position:relative;margin:0 0 10px -36px;background:var(--bc);color:#fff;border-radius:999px;padding:8px 16px;font-weight:800;font-size:15.5px;box-shadow:0 3px 8px rgba(31,73,125,.18)}
+.branch small{font-weight:500;font-size:12px;opacity:.88;margin-left:6px}
+.kn{position:relative;display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.kn::before{content:"";position:absolute;left:-22px;top:17px;width:18px;border-top:2px solid var(--bc);opacity:.7}
+.kwnode{flex:none;display:inline-flex;align-items:center;gap:4px;background:#fff;border:2px solid var(--bc);border-radius:999px;padding:5px 12px;max-width:240px}
+.kn.added .kwnode{border-style:dashed}
+.kn.star .kwnode{background:var(--starbg);border-color:var(--star)}
+.kwname{border:0;background:transparent;padding:0;font-weight:800;font-size:14.5px;color:var(--navy);text-align:left;line-height:1.25;cursor:pointer}
+.kwname .no{font-size:11px;color:var(--mute);font-weight:700;margin-right:4px}
+.kn.star .kwname::after{content:" ★";color:var(--star)}
+.leaves{display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:1;min-width:0}
+.addrow{display:inline-flex;gap:4px;align-items:center}
+.addrow input{width:128px;height:32px;border:1px dashed #9DB2CC;border-radius:999px;padding:4px 12px;font-size:13.5px;background:#fff}
+.addrow input:focus{border-style:solid;border-color:var(--navy);outline:none;width:180px}
+.addrow .btn{padding:4px 10px;font-size:12.5px;border-radius:999px;white-space:nowrap}
+.addkw{display:flex;gap:6px;max-width:420px;margin-top:4px}
+.addkw input{flex:1;min-width:0;height:34px;border:1.5px dashed var(--bc);border-radius:999px;padding:4px 14px;font-size:13.5px;background:#fff}
+.addkw .btn{border-radius:999px;font-size:13px;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12.5px;color:var(--sub);margin:0 0 8px}
+.legend .chip{min-height:0;padding:2px 9px;font-size:12px;cursor:default}
+@media(max-width:759px){
+  body{font-size:14.5px}
+  .toolbar .hint{display:none}
+  .mm{padding:12px 10px 4px}
+  .bb{margin-left:6px;padding-left:16px}
+  .branch{margin-left:-28px}
+  .kn{display:block}
+  .kn::before{left:-16px;width:12px}
+  .leaves{margin:6px 0 0 12px;padding-left:10px;border-left:2px dotted #C9D5E5}
+}
+
+/* 출발 질문 */
+.startq{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--navy);border-radius:var(--r);padding:16px 18px;margin-bottom:20px}
+.startq .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:var(--navy);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+.startq ol{margin:0 0 12px;padding-left:22px}
+.startq li{font-size:19px;font-weight:800;color:var(--navy);line-height:1.4;margin:4px 0}
+.startq label{display:block;font-size:13px;font-weight:700;color:var(--sub);margin-bottom:5px}
+.startq input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;background:#fff}
+.startq .small{margin-top:5px}
+@media(max-width:759px){.startq li{font-size:16.5px}}
+.whybox{background:var(--pale);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:6px}
+.whybox b{display:block;font-size:12.5px;color:var(--sub);margin-bottom:2px}
+.whybox span{font-size:15px;font-weight:700;color:var(--navy)}
+.check{margin-top:6px;font-size:13px;color:var(--mute);background:#F2F2F2;border-radius:8px;padding:7px 10px}
+
+/* 지운 단어 */
+.tray{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.tray h3{margin:0 0 6px;font-size:14px;color:var(--sub)}
+.tray .chip{background:var(--del);color:#777;text-decoration:line-through;cursor:pointer}
+.tray .chip:hover{text-decoration:none}
+.tray .empty{font-size:13px;color:var(--mute)}
+
+/* 하단 바 */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.06);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.dock .in{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.dock .picked{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--sub)}
+.dock .picked b{color:var(--navy)}
+
+/* 패널 */
+.sheet{position:fixed;inset:0;z-index:50;background:rgba(15,25,40,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet .box{background:#fff;width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom))}
+@media(min-width:760px){.sheet{align-items:center}.sheet .box{border-radius:16px}}
+.backbar{position:sticky;top:-18px;z-index:2;background:#fff;margin:-18px -18px 10px;padding:12px 18px 10px;border-bottom:1px solid var(--line);display:flex}
+.backbar .btn{font-size:14px;padding:8px 14px}
+.sheet h2{margin:0 0 4px;font-size:18px;color:var(--navy)}
+.sheet .lead{margin:0 0 12px;font-size:13.5px;color:var(--sub)}
+.pgroup{margin:10px 0}
+.pgroup h4{margin:0 0 6px;font-size:13px;color:var(--sub)}
+.pgroup .none{font-size:13px;color:var(--mute)}
+textarea{width:100%;min-height:96px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.small{font-size:12.5px;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:#222;color:#fff;padding:9px 14px;border-radius:999px;font-size:13.5px;z-index:80;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:.92}
+.ask .box{max-width:420px}
+
+/* PDF · 인쇄 문서 */
+#pdfStage{position:fixed;left:-10000px;top:0;width:690px;background:#fff}
+#pdfStage .pdoc{width:690px;box-sizing:border-box;padding-right:2px}
+.pdoc{font-family:Pretendard,"Malgun Gothic",sans-serif;color:#222;font-size:12.5px;line-height:1.5}
+.pdoc h1{font-size:19px;color:#1F497D;margin:0 0 2px}
+.pdoc .meta{color:#666;font-size:11.5px;margin-bottom:12px}
+.pdoc h2{font-size:14px;color:#fff;background:#1F497D;padding:5px 10px;border-radius:4px;margin:14px 0 8px}
+.pdoc .box{border:1px solid #BFC9D6;border-radius:6px;padding:9px 11px;margin-bottom:8px}
+.pdoc .draft{font-size:15px;font-weight:700;color:#1F497D;white-space:pre-wrap}
+.pdoc .blk{margin-bottom:6px}
+.pdoc .ln{padding:3px 0;border-bottom:1px solid #EEF1F5}
+.pdoc .k{font-weight:700;color:#1F497D}
+.pdoc .s{background:#FFF4D6;border:1px solid #C98A00;border-radius:10px;padding:0 6px;font-weight:700}
+.pdoc .a{border:1px dashed #7FA0C8;border-radius:10px;padding:0 6px}
+.pdoc .d{text-decoration:line-through;color:#888}
+.pdoc .note{font-size:10.5px;color:#777}
+#printDoc{display:none}
+@media print{
+  body{background:#fff;padding:0}
+  body>*:not(#printDoc){display:none!important}
+  #printDoc{display:block}
+  .pb{break-before:page}
+}
+</style>
+</head>
+<body>
+
+<div id="inapp" class="inapp hidden"><div class="in">
+  <span><b>앱 안 브라우저로 열렸습니다.</b> 저장이 잘 안 될 수 있으니 Chrome · Safari로 열어 주세요.</span>
+  <button class="btn" id="openExt">Chrome으로 열기</button>
+  <button class="btn" id="copyUrl">주소 복사</button>
+</div></div>
+
+<header><div class="in">
+  <div>
+    <h1>미션 핵심어 마인드맵</h1>
+    <p>우정인재개발원 1차 전략 워크숍 · 2026. 10. 22.</p>
+  </div>
+  <div class="who">
+    <select id="grp" aria-label="조"><option value="">조 선택</option><option>1조</option><option>2조</option><option>3조</option><option>개인</option></select>
+    <input id="nm" placeholder="이름(선택)" maxlength="20" aria-label="이름">
+  </div>
+</div></header>
+
+<div class="toolbar"><div class="in">
+  <div class="hint" id="hint">① 핵심어 옆 「＋ 떠오르는 말」에 쓰기 → ② 끌리는 말을 눌러 ★ 표시(나중에 바꿔도 됨) → ③ 빠진 핵심어는 갈래 맨 아래에서 더하기</div>
+  <button class="btn" id="delBtn">빼기</button>
+  <button class="btn ghost" id="resetBtn">처음 상태로</button>
+</div></div>
+
+<main>
+  <section class="startq">
+    <span class="tag">출발 질문</span>
+    <ol>
+      <li>우리가 없으면 우정사업본부에 어떤 문제가 생길까요?</li>
+      <li>다른 교육기관이나 콘텐츠가 우리의 역할을 대신할 수 없는 이유는?</li>
+    </ol>
+    <label for="why">우리만의 이유</label>
+    <input id="why" maxlength="80" placeholder="한 줄로 적어 보세요">
+    <p class="small">이 기기에만 임시 저장됨 · 정리 화면과 PDF · 복사 결과에 함께 담김</p>
+  </section>
+  <div class="legend"><span><b style="color:var(--navy)">읽는 법</b></span><span class="chip">연관된 말</span> 누르면 ★ 표시 <span class="chip added">내가 더한 말</span> 점선 · 각 줄 끝 「＋ 떠오르는 말」 칸에 쓰고 Enter</div>
+  <div class="mm" id="mm"></div>
+  <section class="tray" id="tray"><h3>지운 단어 — 누르면 되돌림</h3><div class="chips" id="trayChips"></div></section>
+  <p class="small" style="margin-top:14px">핵심어 14개(지향 가치 · 핵심 역할 · 방식): 중간보고(2026.10.8) p.9 · 존재 이유 4개 · 연관된 말: 다다름 정리(생각을 여는 예시일 뿐 정답 목록이 아님) · 목록 밖의 말을 자유롭게 더하는 것이 이 도구의 목적 · 입력 내용은 이 기기 브라우저에만 저장됨</p>
+</main>
+
+<div class="dock"><div class="in">
+  <div class="picked" id="picked"></div>
+  <button class="btn pri" id="openSheet">모아 보기 · 저장</button>
+</div></div>
+
+<div class="sheet hidden" id="sheet"><div class="box">
+  <div class="backbar"><button class="btn pri" id="backTop" data-back>← 마인드맵으로 돌아가기</button></div>
+  <h2>넓혀 본 미션 재료</h2>
+  <p class="lead">무언가를 정한 결과가 아니라 생각을 넓힌 기록임 — 조 토론에서 포스트잇 재료로 씀</p>
+  <div class="whybox"><b>우리만의 이유</b><span id="whyShow"></span></div>
+  <div id="pickedList"></div>
+  <div class="pgroup">
+    <h4>떠오른 문장 (자유롭게 · 여러 개 써도 됨)</h4>
+    <textarea id="draft" placeholder="예) 우정인재개발원은 국민 신뢰를 위해 우정 고유 직무의 직무 전문성을 키운다"></textarea>
+    <p class="check">‘우정인재개발원’을 다른 교육기관 이름으로 바꾸면 어색해지나요?</p>
+    <div class="row"><button class="btn" id="frame">★ 표시한 말로 문장 엮어 보기</button></div>
+  </div>
+  <div class="row">
+    <button class="btn pri" id="savePdf">PDF로 저장</button>
+    <button class="btn" id="copyTxt">내용 복사</button>
+    <button class="btn hidden" id="submitBtn">진행자에게 보내기</button>
+    <button class="btn ghost" id="printBtn">인쇄하기 (PC)</button>
+    <button class="btn" id="closeSheet" data-back>← 마인드맵으로 돌아가기</button>
+  </div>
+  <p class="small" id="saveHint">저장이 안 되면 「내용 복사」를 누른 뒤 메모 앱이나 카카오톡 나와의 채팅에 붙여 넣으세요.</p>
+</div></div>
+
+<div class="sheet ask hidden" id="askBox"><div class="box">
+  <h2 id="askT"></h2><p class="lead" id="askM"></p>
+  <div class="row" id="askBtns"></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+<div id="printDoc"></div>
+
+<script>
+(function(){
+/* ───────── 설정 ─────────
+   SUBMIT_URL: 진행자 수집용 Google Apps Script 웹앱 주소(비워 두면 「진행자에게 보내기」 버튼이 숨겨짐)
+   FILE_PREFIX: 저장 파일 이름 앞부분(영문 · 숫자만)                                  */
+const CONFIG = { SUBMIT_URL: "", FILE_PREFIX: "wpost_mission_map", STORE_KEY: "wpost_ws1_mission_map_v6" };
+
+// [갈래 이름(데이터 키), 부제, 화면 표시 이름, 선택 갈래 여부]
+const BR = [["존재 이유","왜 우리여야 하나"],["지향 가치","무엇을 위해"],["핵심 역할","무엇을"],["방식","어떻게 — 넣지 않아도 됨","(선택) 방식",true]];
+const SEED = [
+ ["존재 이유","00-1","우정 고유 직무","우정 고유 직무를 가르칠 곳은 우정 안에 있음",["우정 직무","우정사업 고유 업무","현장 직무"]],
+ ["존재 이유","00-2","본부 직할 교육기관","본부 전략 · 사업 전환을 사람의 역량으로 뒷받침",["본부 직속","우정사업본부 소속","전략 실행 조직"]],
+ ["존재 이유","00-3","우정 현장 노하우","숙련자 경험 · 관서 사례가 모이고 전해지는 곳",["명장","노하우","관서 사례","전수"]],
+ ["존재 이유","00-4","우정 공무원 교육훈련기관","우정 공무원의 기본 · 공통 교육과 공직 정체성",["공무원 교육훈련","우정 공무원 양성","공직 교육"]],
+ ["지향 가치","01","국민 신뢰 · 편익","교육으로 우정 서비스 품질을 높여 최종 수혜자인 국민에게 닿음",["국민 체감","신뢰받는","보편적 서비스","공공 가치"]],
+ ["지향 가치","02","우정사업 지속성장","사업 구조 전환기에 사업 경쟁력을 사람으로 뒷받침",["미래 성장","경쟁력","사업 전환","지속가능"]],
+ ["지향 가치","03","연결","숙련자 노하우 · 외부 자원 · 현장을 학습으로 연결",["잇다","협업","개방","네트워크"]],
+ ["지향 가치","04","성장하는 우정인","구성원 개인의 성장과 경력 개발을 함께 지원",["배움","경력 성장","자기주도","잠재력"]],
+ ["핵심 역할","05","직무 전문성","우정 고유 직무의 전문성",["전문가","숙련","현장 노하우","최고 수준"]],
+ ["핵심 역할","06","변화 적응 역량","사업 · 직무 전환에 맞춘 역량 재설계",["전환","민첩성","재교육","회복력"]],
+ ["핵심 역할","07","AI 활용 역량","직무와 결합해 업무에 활용하는 AI",["디지털","데이터","AI 협업","일하는 방식"]],
+ ["핵심 역할","08","사람 고유 역량","문제인식 · 관계 · 소통 · 리더십",["소통","관계","판단력","리더십"]],
+ ["핵심 역할","09","공직가치 · 자긍심","국가기관 종사자의 정체성 · 공공성 · AI 윤리",["공공성","윤리","사명감","자부심"]],
+ ["방식","10","문제해결 · 현장 중심","관서 현안을 과제로 가져와 푸는 실습 중심 학습",["실천","현장","일 속의 학습","해결"]],
+ ["방식","11","학습–현업–성과 연결","현업 적용부터 6개월 후 성과까지 측정 · 환류",["성과","적용","변화","환류"]],
+ ["방식","12","선제 대응","사업 전환 시점을 확인해 현장보다 먼저 교육 준비",["미리","앞서","예측","준비"]],
+ ["방식","13","상시 · 맞춤 학습","직무 진단 · 인사이동 시점에 맞춘 학습",["언제 어디서나","개인 맞춤","평생학습","필요한 때"]],
+ ["방식","14","기본에 충실","기본 · 공통교육에 집중, 세부 실무는 현장 · 전문 영역은 외부",["기본","본질","내실","표준"]],
+];
+let uid = 0; const nid = p => p + (++uid) + "_" + Date.now().toString(36);
+function fresh(){
+  return { v:4, open:"", grp:"", nm:"", why:"", draft:"", deleted:[],
+    branches: BR.map(([b,sub,label,opt]) => ({ name:b, sub, label:label||b, opt:!!opt, kws: SEED.filter(r=>r[0]===b).map(r => ({ id:"k"+r[1].replace(/[^0-9]/g,"_"), no:r[1], name:r[2], desc:r[3], scope:[], orig:true, star:false, words:r[4].map(w=>({id:nid("w"),t:w,orig:true,star:false})) })) })) };
+}
+/* 저장 */
+function load(){ try{ const t = localStorage.getItem(CONFIG.STORE_KEY); if(t){ const o = JSON.parse(t); if(o && o.v===4) return o; } }catch(e){} return null; }
+function save(){ try{ localStorage.setItem(CONFIG.STORE_KEY, JSON.stringify(S)); }catch(e){} }
+let S = load() || fresh();
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),1800); }
+function ask(title,msg,btns){ return new Promise(res=>{ $("askT").textContent=title; $("askM").textContent=msg; const w=$("askBtns"); w.innerHTML="";
+  btns.forEach(([lab,val,pri])=>{ const b=document.createElement("button"); b.className="btn"+(pri?" pri":""); b.textContent=lab; b.onclick=()=>{ $("askBox").classList.add("hidden"); res(val); }; w.appendChild(b); });
+  $("askBox").classList.remove("hidden"); }); }
+
+/* 그리기 — 나무 모양 */
+let delMode = false;
+function findKw(id){ for(const b of S.branches) for(const k of b.kws) if(k.id===id) return [b,k]; return [null,null]; }
+function render(){
+  document.body.classList.toggle("del", delMode);
+  $("delBtn").classList.toggle("delon", delMode); $("delBtn").textContent = delMode ? "빼기 끝내기" : "빼기";
+  let h = `<div class="root">우정인재개발원 미션<small>생각을 넓히는 재료</small></div>`;
+  S.branches.forEach((b,bi) => {
+    h += `<div class="bb bb${bi}"><div class="branch">${esc(b.label)}<small>${esc(b.sub)}</small></div>`;
+    b.kws.forEach(k => {
+      h += `<div class="kn${k.orig?"":" added"}${k.star?" star":""}" id="${k.id}">
+        <div class="kwnode"><button class="kwname" data-act="kwstar" data-k="${k.id}"><span class="no">${k.orig?esc(k.no):"+"}</span>${esc(k.name)}</button><button class="x" data-act="kwdel" data-k="${k.id}" aria-label="핵심어 빼기">×</button></div>
+        <div class="leaves">${k.words.map(w=>`<span class="chip${w.orig?"":" added"}${w.star?" star":""}" data-act="wstar" data-k="${k.id}" data-w="${w.id}">${esc(w.t)}<button class="x" data-act="wdel" data-k="${k.id}" data-w="${w.id}" aria-label="빼기">×</button></span>`).join("")}<form class="addrow" data-k="${k.id}"><input placeholder="＋ 떠오르는 말" maxlength="60" aria-label="${esc(k.name)}에 떠오르는 말 더하기"><button class="btn">더하기</button></form></div>
+      </div>`;
+    });
+    h += `<form class="addkw" data-b="${bi}"><input placeholder="＋ 「${esc(b.label)}」에 새 핵심어" maxlength="20"><button class="btn">핵심어 더하기</button></form></div>`;
+  });
+  $("mm").innerHTML = h;
+  $("trayChips").innerHTML = S.deleted.length ? S.deleted.map((d,i)=>`<span class="chip" data-act="restore" data-i="${i}">${esc(d.t)}${d.kind==="kw"?" (핵심어)":""}</span>`).join("") : `<span class="empty">아직 없음</span>`;
+  const p = picks(), n = p.reduce((a,x)=>a+x.items.length,0), ad = addedList().length;
+  $("picked").innerHTML = (n||ad) ? `표시 <b>${n}개</b> · 더한 말 <b>${ad}개</b>` + (n? " · " + esc(p.flatMap(x=>x.items).join(", ")) : "") : "떠오르는 말을 더하고, 끌리는 말을 눌러 ★ 표시해 보세요";
+  $("grp").value = S.grp; $("nm").value = S.nm; if (document.activeElement !== $("why")) $("why").value = S.why || "";
+  save();
+}
+function picks(){ return S.branches.map(b => ({ name:b.label, key:b.name, items: b.kws.flatMap(k => (k.star?[k.name]:[]).concat(k.words.filter(w=>w.star).map(w=>w.t))) })); }
+function addedList(){ return S.branches.flatMap(b=>b.kws.flatMap(k=>(k.orig?[]:[k.name+"(핵심어)"]).concat(k.words.filter(w=>!w.orig).map(w=>w.t)))); }
+
+/* 동작 */
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-act]"); if(!t) return;
+  const act = t.dataset.act;
+  if (act==="restore"){ const d=S.deleted.splice(+t.dataset.i,1)[0]; const [,k]=findKw(d.k);
+    if(d.kind==="kw"){ const b=S.branches[d.b]; b.kws.splice(Math.min(d.pos,b.kws.length),0,d.obj); }
+    else if(k){ k.words.push(d.obj); } else { toast("핵심어가 빠져 있어 되돌릴 수 없음 — 핵심어부터 되돌려 주세요"); S.deleted.splice(+t.dataset.i,0,d); }
+    render(); return; }
+  const [b,k] = findKw(t.dataset.k); if(!k) return;
+  if (act==="kwstar"){ if(delMode) return; k.star=!k.star; render(); }
+  else if (act==="wstar"){ if(delMode || e.target.closest(".x")) return; const w=k.words.find(x=>x.id===t.dataset.w); if(w){ w.star=!w.star; render(); } }
+  else if (act==="wdel"){ e.stopPropagation(); const i=k.words.findIndex(x=>x.id===t.dataset.w); if(i>-1){ const w=k.words.splice(i,1)[0]; S.deleted.unshift({kind:"w",k:k.id,t:w.t,obj:w}); render(); toast("「"+w.t+"」를 뺌 — 아래에서 되돌릴 수 있음"); } }
+  else if (act==="kwdel"){ e.stopPropagation(); const ok = await ask("핵심어 빼기","「"+k.name+"」와 딸린 말을 함께 뺌. 아래 「지운 단어」에서 되돌릴 수 있음",[["취소",false],["빼기",true,true]]); if(!ok) return;
+    const bi=S.branches.indexOf(b), pos=b.kws.indexOf(k); b.kws.splice(pos,1); S.deleted.unshift({kind:"kw",k:k.id,b:bi,pos,t:k.name,obj:k}); render(); }
+});
+$("delBtn").onclick = () => { delMode=!delMode; render(); };
+document.addEventListener("submit", e => {
+  e.preventDefault(); const f=e.target, inp=f.querySelector("input"); if(!inp) return; const raw=inp.value.trim(); if(!raw) return;
+  let sel;
+  if (f.classList.contains("addrow")){ const [,k]=findKw(f.dataset.k); let n=0;
+    raw.split(/[,，、]/).map(v=>v.trim().replace(/\s+/g," ")).filter(Boolean).forEach(v=>{ if(!k.words.some(w=>w.t===v)){ k.words.push({id:nid("w"),t:v.slice(0,20),orig:false,star:false}); n++; } });
+    if(!n){ toast("이미 있는 말임"); return; } sel=`form.addrow[data-k="${k.id}"] input`; }
+  else if (f.classList.contains("addkw")){ const v=raw.replace(/\s+/g," ").slice(0,20), b=S.branches[+f.dataset.b]; if(b.kws.some(x=>x.name===v)){ toast("이미 있는 핵심어임"); return; }
+    const k={id:nid("k"),no:"",name:v,desc:"",scope:[],orig:false,star:false,words:[]}; b.kws.push(k); sel=`form.addrow[data-k="${k.id}"] input`; toast("「"+v+"」 핵심어를 더함 — 이어서 떠오르는 말을 적어 보세요"); }
+  else return;
+  render(); const again=document.querySelector(sel); if(again) again.focus();
+});
+$("grp").onchange = e => { S.grp=e.target.value; save(); };
+$("nm").oninput = e => { S.nm=e.target.value; save(); };
+$("why").oninput = e => { S.why=e.target.value; save(); };
+$("resetBtn").onclick = async () => { const ok = await ask("처음 상태로","표시 · 더한 말 · 초안이 모두 지워지고 처음 마인드맵으로 돌아감",[["취소",false],["처음으로",true,true]]); if(!ok) return; const g=S.grp,n=S.nm,w=S.why; S=fresh(); S.grp=g; S.nm=n; S.why=w; delMode=false; render(); };
+
+/* 정리 패널 */
+function openSheet(){
+  const p = picks();
+  const ad = addedList();
+  $("pickedList").innerHTML = `<div class="pgroup"><h4>내가 더한 말</h4>${ad.length?`<div class="chips">${ad.map(i=>`<span class="chip added">${esc(i)}</span>`).join("")}</div>`:`<span class="none">아직 없음</span>`}</div>` + `<div class="pgroup"><h4 style="margin-top:4px">★ 표시한 말</h4></div>` + p.map(x=>`<div class="pgroup"><h4>${esc(x.name)}</h4>${x.items.length?`<div class="chips">${x.items.map(i=>`<span class="chip star">${esc(i)}</span>`).join("")}</div>`:`<span class="none">표시 없음</span>`}</div>`).join("");
+  $("whyShow").textContent = S.why ? S.why : "적지 않음 — 위쪽 「출발 질문」에서 적을 수 있음"; $("draft").value = S.draft; $("sheet").classList.remove("hidden");
+}
+$("openSheet").onclick = openSheet;
+const backToMap = () => { $("sheet").classList.add("hidden"); };
+document.querySelectorAll("[data-back]").forEach(b => b.onclick = backToMap);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("sheet").classList.contains("hidden") && $("askBox").classList.contains("hidden")) backToMap(); });
+$("sheet").addEventListener("click", e => { if(e.target.id==="sheet") $("sheet").classList.add("hidden"); });
+$("draft").oninput = e => { S.draft=e.target.value; save(); };
+$("frame").onclick = () => {
+  const p=picks(), get=k=>{ const x=p.find(y=>y.key===k); return x ? x.items.slice(0,2).join(" · ") : ""; };
+  const why=get("존재 이유"), val=get("지향 가치")||"[ ]", role=get("핵심 역할")||"[ ]", how=get("방식");
+  // 받침 유무로 을/를 고름(빈칸 "[ ]"는 「를」)
+  const jo = w => { const c = w.trim().slice(-1).charCodeAt(0); return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? "을" : "를"; };
+  const f = `우정인재개발원은 ${val}${jo(val)} 위해 ${how?how+jo(how)+" 통해 ":""}${why?why+"의 ":""}${role}${jo(role)} 한다`;
+  $("draft").value = ($("draft").value ? $("draft").value + "\n" : "") + f; S.draft=$("draft").value; save(); };
+
+/* 결과 문서 — 인쇄 · PDF · 복사 공용 */
+function stamp(){ const d=new Date(), z=n=>String(n).padStart(2,"0"); return {txt:`${d.getFullYear()}.${z(d.getMonth()+1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`, file:`${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}`}; }
+function docHtml(){
+  const p=picks(), st=stamp();
+  let h = `<h1>미션 핵심어 마인드맵 — 생각 넓히기 기록</h1><div class="meta">우정인재개발원 1차 전략 워크숍 · ${esc(S.grp||"조 미선택")}${S.nm?" · "+esc(S.nm):""} · ${st.txt}</div>`;
+  h += `<h2>우리만의 이유</h2><div class="box">${S.why?esc(S.why):"<span class='note'>적지 않음</span>"}</div>`;
+  h += `<h2>떠오른 문장</h2><div class="box draft">${S.draft?esc(S.draft):"<span class='note'>작성하지 않음</span>"}</div>`;
+  const ad=addedList(); h += `<h2>내가 더한 말</h2><div class="box">${ad.length?ad.map(i=>`<span class="a">${esc(i)}</span>`).join(" "):"<span class='note'>없음</span>"}</div>`;
+  h += `<h2>★ 표시한 말</h2>` + p.map(x=>`<div class="box blk"><span class="k">${esc(x.name)}</span> — ${x.items.length?x.items.map(i=>`<span class="s">${esc(i)}</span>`).join(" "):"<span class='note'>없음</span>"}</div>`).join("");
+  h += `<h2>마인드맵 전체 (★ 표시 · 점선 더한 말)</h2>`;
+  S.branches.forEach(b => { h += `<div class="blk"><div class="k">${esc(b.label)} (${esc(b.sub)})</div>`;
+    b.kws.forEach(k => { h += `<div class="ln"><span class="${k.star?"s":k.orig?"k":"a"}">${esc(k.name)}</span> : ${k.words.map(w=>`<span class="${w.star?"s":w.orig?"":"a"}">${esc(w.t)}</span>`).join(", ")||"<span class='note'>단어 없음</span>"}</div>`; });
+    h += `</div>`; });
+  if (S.deleted.length) h += `<h2>지운 단어</h2><div class="box">${S.deleted.map(d=>`<span class="d">${esc(d.t)}</span>`).join(", ")}</div>`;
+  h += `<p class="note">핵심어 14개: 중간보고(2026.10.8) p.9 · 존재 이유 4개 · 연관된 말: 다다름 정리(예시) · 이 기록은 결정이 아닌 생각 넓히기 결과임</p>`;
+  return h;
+}
+function docText(){
+  const p=picks(), st=stamp();
+  let t = `[미션 핵심어 마인드맵 — 생각 넓히기 기록]\n${S.grp||"조 미선택"}${S.nm?" · "+S.nm:""} · ${st.txt}\n\n■ 우리만의 이유\n${S.why||"(적지 않음)"}\n\n■ 떠오른 문장\n${S.draft||"(작성하지 않음)"}\n\n■ 내가 더한 말\n${addedList().join(", ")||"없음"}\n\n■ ★ 표시한 말\n`;
+  p.forEach(x => t += `- ${x.name}: ${x.items.join(", ")||"없음"}\n`);
+  t += `\n■ 지운 단어\n${S.deleted.map(d=>d.t).join(", ")||"없음"}\n`;
+  return t;
+}
+async function copyText(s){
+  try{ await navigator.clipboard.writeText(s); return true; }catch(e){}
+  try{ const ta=document.createElement("textarea"); ta.value=s; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); const ok=document.execCommand("copy"); ta.remove(); return ok; }catch(e){ return false; }
+}
+$("copyTxt").onclick = async () => toast(await copyText(docText()) ? "복사됨 — 메모 앱이나 카톡에 붙여 넣으세요" : "복사가 막혀 있음 — 화면을 길게 눌러 직접 복사해 주세요");
+$("printBtn").onclick = () => { $("printDoc").innerHTML = `<div class="pdoc">${docHtml()}</div>`; window.print(); };
+
+const H2P = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+function loadScript(src){ return new Promise((res,rej)=>{ if(window.html2pdf) return res(); const s=document.createElement("script"); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+const pdfName = () => `${CONFIG.FILE_PREFIX}_${stamp().file}.pdf`;
+async function makePdf(){
+  await loadScript(H2P);
+  const stage=document.createElement("div"); stage.id="pdfStage"; const docEl=document.createElement("div"); docEl.className="pdoc"; docEl.innerHTML=docHtml();
+  stage.appendChild(docEl); document.body.appendChild(stage); const y=window.scrollY; window.scrollTo(0,0);
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const blob = await window.html2pdf().set({ margin:[12,12,14,12], image:{type:"jpeg",quality:0.92},
+      html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0,windowWidth:document.documentElement.clientWidth},
+      jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}, pagebreak:{mode:["css"],before:".pb",avoid:[".box",".blk",".ln","h2","h3"]} }).from(docEl).outputPdf("blob");
+    return new File([blob], pdfName(), {type:"application/pdf"});
+  } finally { stage.remove(); window.scrollTo(0,y); }
+}
+$("savePdf").onclick = async () => {
+  const b=$("savePdf"); b.disabled=true; b.textContent="PDF 만드는 중…";
+  let file; try{ file = await makePdf(); }catch(e){ toast("PDF를 만들지 못함 — 「내용 복사」를 이용해 주세요"); b.disabled=false; b.textContent="PDF로 저장"; return; }
+  b.disabled=false; b.textContent="PDF로 저장";
+  const canShare = !!(navigator.canShare && navigator.canShare({files:[file]}));
+  const v = await ask("PDF가 준비됨", "파일 이름: "+file.name, [["기기에 저장","save",true]].concat(canShare?[["공유 · 보내기","share"]]:[]).concat([["닫기",""]]));
+  if (v==="save"){ const u=URL.createObjectURL(file); const a=document.createElement("a"); a.href=u; a.download=file.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000);
+    await ask("저장했습니다","내 파일 → 다운로드 폴더에서 「"+file.name+"」를 확인해 주세요. 파일이 없으면 「내용 복사」를 이용해 주세요.",[["확인",true,true]]); }
+  else if (v==="share"){ try{ await navigator.share({files:[file], title:"미션 핵심어 생각 넓히기"}); }catch(e){} }
+};
+/* 진행자 수집(선택) */
+if (CONFIG.SUBMIT_URL){ $("submitBtn").classList.remove("hidden"); }
+$("submitBtn").onclick = async () => {
+  if(!S.grp){ toast("위쪽에서 조를 먼저 골라 주세요"); return; }
+  const p=picks(); const body = { kind:"mission_map", grp:S.grp, name:S.nm, why:S.why, draft:S.draft, picks:p, text:docText(), at:new Date().toISOString() };
+  try{ await fetch(CONFIG.SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}); toast("진행자에게 보냈습니다"); }
+  catch(e){ toast("보내지 못함 — 「내용 복사」 후 진행자에게 전달해 주세요"); }
+};
+
+/* 앱 안 브라우저 안내 */
+const INAPP = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|BAND\/|; wv\)/i.test(navigator.userAgent);
+if (INAPP){ $("inapp").classList.remove("hidden"); $("saveHint").textContent = "앱 안 브라우저에서는 저장이 안 될 수 있음 — 「내용 복사」를 이용하거나 Chrome · Safari로 다시 열어 주세요."; }
+$("openExt").onclick = () => { const u=location.href;
+  if (/KAKAOTALK/i.test(navigator.userAgent)) location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(u);
+  else if (/Android/i.test(navigator.userAgent)) location.href = "intent://" + u.replace(/^https?:\/\//,"") + "#Intent;scheme=https;package=com.android.chrome;end";
+  else toast("오른쪽 위 메뉴에서 「다른 브라우저로 열기」를 눌러 주세요"); };
+$("copyUrl").onclick = async () => toast(await copyText(location.href) ? "주소 복사됨 — Chrome 주소창에 붙여 넣으세요" : "복사가 막혀 있음");
+
+render();
+window.__t = { makePdf:()=>makePdf(), get S(){return S;} };
+})();
+</script>
+</body>
+</html>
